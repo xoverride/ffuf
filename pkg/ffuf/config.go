@@ -59,6 +59,7 @@ type Config struct {
 	StopOn403                 bool                  `json:"stop_403"`
 	StopOnAll                 bool                  `json:"stop_all"`
 	StopOnErrors              bool                  `json:"stop_errors"`
+	Retries                   int                   `json:"retries"`
 	Threads                   int                   `json:"threads"`
 	Timeout                   int                   `json:"timeout"`
 	Url                       string                `json:"url"`
@@ -121,6 +122,7 @@ func NewConfig(ctx context.Context, cancel context.CancelFunc) Config {
 	conf.StopOn403 = false
 	conf.StopOnAll = false
 	conf.StopOnErrors = false
+	conf.Retries = 1
 	conf.Timeout = 10
 	conf.Url = ""
 	conf.Verbose = false

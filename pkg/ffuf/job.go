@@ -268,7 +268,7 @@ func (j *Job) startExecution() {
 			defer func() { <-threadlimiter }()
 			defer wg.Done()
 			threadStart := time.Now()
-			j.runTask(nextInput, nextPosition, false)
+			j.runTask(nextInput, nextPosition, j.Config.Retries)
 			j.sleepIfNeeded()
 			threadEnd := time.Now()
 			j.Rate.Tick(threadStart, threadEnd)
@@ -392,7 +392,7 @@ func (j *Job) ffufHash(pos int) []byte {
 	return []byte(hashstring)
 }
 
-func (j *Job) runTask(input map[string][]byte, position int, retried bool) {
+func (j *Job) runTask(input map[string][]byte, position int, retried int) {
 	basereq := j.queuejobs[j.queuepos-1].req
 	req, err := j.Runner.Prepare(input, &basereq)
 	req.Position = position
@@ -405,11 +405,19 @@ func (j *Job) runTask(input map[string][]byte, position int, retried bool) {
 
 	resp, err := j.Runner.Execute(&req)
 	if err != nil {
-		if retried {
+		if retried <= 0 {
 			j.incError()
+			log.Printf("Error occurred, all %s attempts failed.", j.Config.Retries)
+			dump, err_2 := ttputil.DumpRequestOut(req, true)
+			if err_2 != nil {
+				log.Printf("Error while dump req: %s", err_2)
+			}
+			else{
+				log.Printf("Req: %q", dump)
+			}
 			log.Printf("%s", err)
 		} else {
-			j.runTask(input, position, true)
+			j.runTask(input, position, retried - 1)
 		}
 		if os.IsTimeout(err) {
 			for name := range j.Config.MatcherManager.GetMatchers() {
