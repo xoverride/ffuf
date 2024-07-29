@@ -356,7 +356,12 @@ func (s *Stdoutput) writeResultToFile(resp ffuf.Response) string {
 		}
 	}
 	fileContent = fmt.Sprintf("%s\n---- ↑ Request ---- Response ↓ ----\n\n%s", resp.Request.Raw, resp.Raw)
-
+	if len(resp.Raw) <=0 {
+		s.Error("Error Resp")
+		log.Printf("%x", &resp)
+	} else {
+		log.Printf("Got Resp of size: %d", len(resp.Raw))
+	}
 	// Create file name
 	fileName = fmt.Sprintf("%x", md5.Sum([]byte(fileContent)))
 
