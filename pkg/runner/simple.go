@@ -70,6 +70,7 @@ func NewSimpleRunner(conf *ffuf.Config, replay bool) ffuf.RunnerProvider {
 			TLSClientConfig: &tls.Config{
 				InsecureSkipVerify: true,
 				MinVersion:         tls.VersionTLS10,
+				MaxVersion:         tls.VersionTLS12
 				Renegotiation:      tls.RenegotiateOnceAsClient,
 				ServerName:         conf.SNI,
 				Certificates:       cert,
