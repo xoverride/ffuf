@@ -171,7 +171,11 @@ func (r *SimpleRunner) Execute(req *ffuf.Request) (ffuf.Response, error) {
 	if len(r.config.OutputDirectory) > 0 {
 		rawresp, err := httputil.DumpResponse(httpresp, true)
 		if err != nil {
-			log.Printf("Error while dump req: %s", err)
+			if stringsutil.ContainsAny(err.Error(), "tls: user canceled") {
+				resp.Raw = string(rawresp)
+			} else {
+				log.Printf("Error while dump Response: %s", err)
+			}
 		} else {
 			resp.Raw = string(rawresp)
 		}
