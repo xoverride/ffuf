@@ -8,7 +8,6 @@ import (
 	"os/signal"
 	"sync"
 	"syscall"
-	"net/http/httputil"
 	"time"
 )
 
@@ -409,7 +408,7 @@ func (j *Job) runTask(input map[string][]byte, position int, retried int) {
 		if retried <= 0 {
 			j.incError()
 			log.Printf("Error occurred, all %s attempts failed.", j.Config.Retries)
-			dump, err_2 := httputil.DumpRequestOut(req, true)
+			dump, err_2 := j.Runner.Dump(req)
 			if err_2 != nil {
 				log.Printf("Error while dump req: %s", err_2)
 			} else {
