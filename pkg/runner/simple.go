@@ -170,8 +170,8 @@ func (r *SimpleRunner) Execute(req *ffuf.Request) (ffuf.Response, error) {
 
 	if len(r.config.OutputDirectory) > 0 {
 		rawresp, err := httputil.DumpResponse(httpresp, true)
-		if err_2 != nil {
-			log.Printf("Error while dump req: %s", err_2)
+		if err != nil {
+			log.Printf("Error while dump req: %s", err)
 		} else {
 			resp.Raw = string(rawresp)
 		}
