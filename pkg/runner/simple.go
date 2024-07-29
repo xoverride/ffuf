@@ -101,6 +101,17 @@ func (r *SimpleRunner) Prepare(input map[string][]byte, basereq *ffuf.Request) (
 	return req, nil
 }
 
+// ContainsAnyI returns true if s contains any specified substring (case-insensitive).
+func ContainsAnyI(s string, ss ...string) bool {
+	s = strings.ToLower(s)
+	for _, sss := range ss {
+		if strings.Contains(s, strings.ToLower(sss)) {
+			return true
+		}
+	}
+	return false
+}
+
 func (r *SimpleRunner) Execute(req *ffuf.Request) (ffuf.Response, error) {
 	var httpreq *http.Request
 	var err error
@@ -171,7 +182,7 @@ func (r *SimpleRunner) Execute(req *ffuf.Request) (ffuf.Response, error) {
 	if len(r.config.OutputDirectory) > 0 {
 		rawresp, err := httputil.DumpResponse(httpresp, true)
 		if err != nil {
-			if stringsutil.ContainsAny(err.Error(), "tls: user canceled") {
+			if ContainsAny(err.Error(), "tls: user canceled") {
 				resp.Raw = string(rawresp)
 			} else {
 				log.Printf("Error while dump Response: %s", err)
