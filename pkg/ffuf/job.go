@@ -411,8 +411,7 @@ func (j *Job) runTask(input map[string][]byte, position int, retried int) {
 			dump, err_2 := ttputil.DumpRequestOut(req, true)
 			if err_2 != nil {
 				log.Printf("Error while dump req: %s", err_2)
-			}
-			else{
+			} else {
 				log.Printf("Req: %q", dump)
 			}
 			log.Printf("%s", err)
