@@ -189,6 +189,8 @@ func (r *SimpleRunner) Execute(req *ffuf.Request) (ffuf.Response, error) {
 		} else {
 			resp.Raw = string(rawresp)
 		}
+		log.Printf("Dump Response: %q", rawresp)
+		log.Printf("Dump Response (s): %s", resp.Raw)
 		resp.Request.Raw = string(rawreq)
 		
 	}
