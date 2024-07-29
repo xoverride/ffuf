@@ -187,6 +187,7 @@ GENERAL OPTIONS:
   -noninteractive     Disable the interactive console functionality (default: false)
   -p                  Seconds of `delay` between requests, or a range of random delay. For example "0.1" or "0.1-2.0"
   -rate               Rate of requests per second (default: 0)
+  -rt                 Number of retries for a request (default: 1)
   -s                  Do not print additional information (silent mode) (default: false)
   -sa                 Stop on all error cases. Implies -sf and -se. (default: false)
   -scraperfile        Custom scraper file path
