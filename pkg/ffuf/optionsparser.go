@@ -67,6 +67,7 @@ type GeneralOptions struct {
 	ShowVersion               bool     `toml:"-" json:"-"`
 	StopOn403                 bool     `json:"stop_on_403"`
 	StopOnAll                 bool     `json:"stop_on_all"`
+	Retries                   int      `json:"retries"`
 	StopOnErrors              bool     `json:"stop_on_errors"`
 	Threads                   int      `json:"threads"`
 	Verbose                   bool     `json:"verbose"`
@@ -141,6 +142,7 @@ func NewConfigOptions() *ConfigOptions {
 	c.General.ShowVersion = false
 	c.General.StopOn403 = false
 	c.General.StopOnAll = false
+	c.General.Retries = 1
 	c.General.StopOnErrors = false
 	c.General.Threads = 40
 	c.General.Verbose = false
@@ -521,6 +523,7 @@ func ConfigFromOptions(parseOpts *ConfigOptions, ctx context.Context, cancel con
 	conf.Scrapers = parseOpts.General.Scrapers
 	conf.StopOn403 = parseOpts.General.StopOn403
 	conf.StopOnAll = parseOpts.General.StopOnAll
+	conf.Retries = parseOpts.General.Retries
 	conf.StopOnErrors = parseOpts.General.StopOnErrors
 	conf.FollowRedirects = parseOpts.HTTP.FollowRedirects
 	conf.Raw = parseOpts.HTTP.Raw
