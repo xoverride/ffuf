@@ -16,7 +16,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
+	"log"
 	"github.com/ffuf/ffuf/v2/pkg/ffuf"
 
 	"github.com/andybalholm/brotli"
@@ -169,9 +169,14 @@ func (r *SimpleRunner) Execute(req *ffuf.Request) (ffuf.Response, error) {
 	}
 
 	if len(r.config.OutputDirectory) > 0 {
-		rawresp, _ := httputil.DumpResponse(httpresp, true)
+		rawresp, err := httputil.DumpResponse(httpresp, true)
+		if err_2 != nil {
+			log.Printf("Error while dump req: %s", err_2)
+		} else {
+			resp.Raw = string(rawresp)
+		}
 		resp.Request.Raw = string(rawreq)
-		resp.Raw = string(rawresp)
+		
 	}
 	var bodyReader io.ReadCloser
 	if httpresp.Header.Get("Content-Encoding") == "gzip" {
