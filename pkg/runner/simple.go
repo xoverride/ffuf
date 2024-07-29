@@ -172,16 +172,21 @@ func (r *SimpleRunner) Execute(req *ffuf.Request) (ffuf.Response, error) {
 	size, err := strconv.Atoi(httpresp.Header.Get("Content-Length"))
 	if err == nil {
 		resp.ContentLength = int64(size)
+		log.Printf("Response ContentLength: %d", resp.ContentLength)
 		if (r.config.IgnoreBody) || (size > MAX_DOWNLOAD_SIZE) {
 			resp.Cancelled = true
+			log.Printf("Cancelled resp")
 			return resp, nil
 		}
+	} else {
+		log.Printf("Error get Content-Length in Response: %s", err)
 	}
 
 	if len(r.config.OutputDirectory) > 0 {
 		rawresp, err := httputil.DumpResponse(httpresp, true)
 		if err != nil {
 			if ContainsAny(err.Error(), "tls: user canceled") {
+				log.Printf("Error while dump Response: %s", err)
 				resp.Raw = string(rawresp)
 			} else {
 				log.Printf("Error while dump Response: %s", err)
@@ -191,6 +196,7 @@ func (r *SimpleRunner) Execute(req *ffuf.Request) (ffuf.Response, error) {
 		}
 		log.Printf("Dump Response: %q", rawresp)
 		log.Printf("Dump Response (s): %s", resp.Raw)
+		log.Printf("Print text: %s", httpresp.text)
 		resp.Request.Raw = string(rawreq)
 		
 	}
