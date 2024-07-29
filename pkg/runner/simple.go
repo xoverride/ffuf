@@ -101,11 +101,10 @@ func (r *SimpleRunner) Prepare(input map[string][]byte, basereq *ffuf.Request) (
 	return req, nil
 }
 
-// ContainsAnyI returns true if s contains any specified substring (case-insensitive).
-func ContainsAnyI(s string, ss ...string) bool {
-	s = strings.ToLower(s)
+// ContainsAny returns true if s contains any specified substring.
+func ContainsAny(s string, ss ...string) bool {
 	for _, sss := range ss {
-		if strings.Contains(s, strings.ToLower(sss)) {
+		if strings.Contains(s, sss) {
 			return true
 		}
 	}
