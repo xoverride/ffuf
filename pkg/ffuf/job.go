@@ -241,7 +241,7 @@ func (j *Job) startExecution() {
 	}
 
 	//Limiter blocks after reaching the buffer, ensuring limited concurrency
-	//threadlimiter := make(chan bool, j.Config.Threads)
+	threadlimiter := make(chan bool, j.Config.Threads)
 
 	for j.Input.Next() && !j.skipQueue {
 		// Check if we should stop the process
@@ -253,7 +253,7 @@ func (j *Job) startExecution() {
 		}
 		j.pauseWg.Wait()
 		// Handle the rate & thread limiting
-		//threadlimiter <- true
+		threadlimiter <- true
 		// Ratelimiter handles the rate ticker
 		<-j.Rate.RateLimiter.C
 		nextInput := j.Input.Value()
@@ -265,7 +265,7 @@ func (j *Job) startExecution() {
 		j.Counter++
 
 		go func() {
-			//defer func() { <-threadlimiter }()
+			defer func() { <-threadlimiter }()
 			defer wg.Done()
 			threadStart := time.Now()
 			j.runTask(nextInput, nextPosition, j.Config.Retries)
